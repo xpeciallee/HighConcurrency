@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 @ThreadSafe
-public class CountExample2 {
+public class CountExample3 {
      
     //请求总数
     public static int clientTotal = 5000;
@@ -19,7 +19,7 @@ public class CountExample2 {
     public static int threadTotal = 200;
     
     //计数器
-    public static AtomicInteger count = new AtomicInteger(0);
+    public static int count = 0;
     
     public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
@@ -42,11 +42,12 @@ public class CountExample2 {
         }
         countDownLatch.await();
         executorService.shutdown();
-        System.out.println("count = " + count.get());
+        System.out.println("count = " + count);
     }
     
-    private static void add(){
-        count.incrementAndGet();
+    private synchronized static void add(){
+//        count.incrementAndGet();
 //        count.getAndIncrement()
+        count++;
     }
 }

@@ -1,8 +1,6 @@
-package com.mmal.concurrency.annoations;
+package com.mmal.concurrency;
 
-
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
+import com.mmal.concurrency.annoations.NotThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CountDownLatch;
@@ -10,9 +8,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
-import static jdk.internal.jline.internal.Log.error;
 
-@Log4j2
+@Slf4j
+@NotThreadSafe
 public class ConcurrencyTest {
      
     //请求总数
@@ -24,12 +22,12 @@ public class ConcurrencyTest {
     //计数器
     public static int count = 0;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
         //定义信号量,给定允许并发的数目(threadTotal)
         final Semaphore semaphore = new Semaphore(threadTotal);
         //定义闭锁
-        final CountDownLatch countDownLatch = new CountDownLatch(count);
+        final CountDownLatch countDownLatch = new CountDownLatch(clientTotal);
 
         for (int i = 0; i < clientTotal; i++) {
             executorService.execute(()->{
@@ -38,12 +36,14 @@ public class ConcurrencyTest {
                     add();
                     semaphore.release();
                 } catch (Exception e) { 
-//                    e.printStackTrace();
-                    logger
+                    e.printStackTrace();
                 }
                 countDownLatch.countDown();
             });
         }
+        countDownLatch.await();
+        executorService.shutdown();
+        System.out.println("count = " + count);
     }
     
     private static void add(){

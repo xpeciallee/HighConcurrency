@@ -7,19 +7,19 @@ import java.util.concurrent.Executors;
 //是带不上synchronized，是因为synchronized是不属于方法声明的一部分
 public class SynchronizedExample2 {
 
-    // /修饰代码块，作用范围是代码块，作用对象是调用该方法的对象
-    public void test1(int j) {
-        synchronized (this) {
+    public static void test1(int j) {
+        //修饰一个类,作用于该类，同一个类，不同对象，只能同时有一个对象调用
+        synchronized (SynchronizedExample2.class) {
             for (int i = 1; i < 10; i++) {
                 System.out.println(j+"test1-->"+i);
             }
         }
     }
 
-    //修饰方法，作用范围是整个方法。作用对象是调用该方法的对象
-    public synchronized void test2(){
+    //修饰静态方法,作用于该类，同一个类，不同对象，只能同时有一个对象调用
+    public static synchronized void test2(int j ){
         for (int i = 0; i < 10; i++) {
-            System.out.println(i);
+            System.out.println(j+"---test----"+i);
         }
     }
 

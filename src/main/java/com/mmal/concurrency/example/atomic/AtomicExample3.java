@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.LongAdder;
 
 @ThreadSafe
 public class AtomicExample3 {
@@ -17,7 +18,7 @@ public class AtomicExample3 {
     public static int threadTotal = 200;
 
     //计数器
-    public static AtomicLong count = new AtomicLong(0);
+    public static LongAdder count = new LongAdder();
 
     public static void main(String[] args) throws InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
@@ -40,11 +41,10 @@ public class AtomicExample3 {
         }
         countDownLatch.await();
         executorService.shutdown();
-        System.out.println("count = " + count.get());
+        System.out.println("count = " + count);
     }
 
     private static void add(){
-        count.incrementAndGet();
-//        count.getAndIncrement()
+        count.increment();
     }
 }
