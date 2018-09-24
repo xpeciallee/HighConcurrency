@@ -24,10 +24,10 @@ public class SingletonExample4 {
     
     //在多线程情况下，发生指令重排。有安全隐患
     //JVM和cpu优化，发生了指令重排
-    
-    //1. memory = allocate()；分配内存空间
-    //3. Instance = memory 设置instance指向刚分配的内存
-    //2. ctorInstance() 初始化对象
+   /* 
+    1. memory = allocate()；分配内存空间
+    3. Instance = memory 设置instance指向刚分配的内存
+    2. ctorInstance() 初始化对象*/
     
     // 定义一个单例对象
     // 每次返回的对象是同一个

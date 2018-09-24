@@ -1,22 +1,21 @@
-package com.mmal.concurrency.example.commonUnsafe;
+package com.mmal.concurrency.example.concurrent;
 
 import com.mmal.concurrency.annoations.NotThreadSafe;
+import com.mmal.concurrency.annoations.ThreadSafe;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.*;
 
-@NotThreadSafe
-public class StringExample1 {
+@ThreadSafe
+public class ConcurrentHashMapExample {
     //请求总数
     public static int clientTotal = 5000;
 
     //允许的同时并发的执行线程数
     public static int threadTotal = 200;
 
-    //计数器
-    public static StringBuilder stringBuilder = new StringBuilder();
+    public static Map<Integer, Integer> map = new ConcurrentHashMap<>();
 
     public static void main(String[] args) throws InterruptedException {
         //  定义线程池，该线程池，是根据线程增长的，
@@ -28,10 +27,11 @@ public class StringExample1 {
         final CountDownLatch countDownLatch = new CountDownLatch(clientTotal);
 
         for (int i = 0; i < clientTotal; i++) {
-            executorService.execute(()->{
+            final int count = i;
+            executorService.execute(() -> {
                 try {
                     semaphore.acquire();
-                    update();
+                    update(count);
                     semaphore.release();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -41,9 +41,11 @@ public class StringExample1 {
         }
         countDownLatch.await();
         executorService.shutdown();
-        System.out.println("count = "+stringBuilder.length());
+        System.out.println("map.size---" + map.size());
     }
-    private static void update(){
-        stringBuilder.append("1");
+
+    private static void update(int i) {
+
+        map.put(i, i);
     }
 }
